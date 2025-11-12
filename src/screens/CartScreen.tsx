@@ -20,14 +20,26 @@ import CartItem from '../components/CartItem';
 const CartScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector(selectCartItems);
+  console.log('cartItems:', cartItems);
   const cartTotal = useAppSelector(selectCartTotal);
   const cartItemsCount = useAppSelector(selectCartItemsCount);
 
   const handleClearCart = () => {
-    Alert.alert('Clear Cart', 'Are you sure you want to remove all items from your cart?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Clear', style: 'destructive', onPress: () => dispatch(clearCart()) },
-    ]);
+    Alert.alert(
+      'Clear Cart',
+      'Are you sure you want to remove all items from your cart?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Clear',
+          style: 'destructive',
+          onPress: () => {
+  console.log('Clearing cart...');
+  dispatch(clearCart());
+          },
+        },
+      ]
+    );
   };
 
   const handleCheckout = () => {

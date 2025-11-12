@@ -33,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <Image
         source={{ uri: product.image }}
         style={styles.image}
-        defaultSource={require('../../assets/placeholder.png')}
+        defaultSource={require('../assets/placeholder.png')}
       />
       <View style={styles.details}>
         <Text style={styles.title}>{product.title}</Text>

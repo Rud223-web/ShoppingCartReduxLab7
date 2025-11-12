@@ -19,27 +19,30 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<Product>) => {
-      const cartItem = state.items.find(item => item.id === action.payload.id);
-      if (cartItem) {
-        cartItem.quantity += 1;
-      } else {
-        state.items.push({ ...action.payload, quantity: 1 });
-      }
-    },
-    removeFromCart: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter(item => item.id !== action.payload);
-    },
-    updateQuantity: (state, action: PayloadAction<{ id: number; quantity: number }>) => {
-      const cartItem = state.items.find(item => item.id === action.payload.id);
-      if (cartItem) {
-        if (action.payload.quantity <= 0) {
-          state.items = state.items.filter(item => item.id !== action.payload.id);
-        } else {
-          cartItem.quantity = action.payload.quantity;
-        }
-      }
-    },
+  const existing = state.items.find(entry => entry.id === action.payload.id);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    state.items.push({ ...action.payload, quantity: 1 });
+  }
+},
+
+removeFromCart: (state, action: PayloadAction<number>) => {
+  state.items = state.items.filter(entry => entry.id !== action.payload);
+},
+
+updateQuantity: (state, action: PayloadAction<{ id: number; quantity: number }>) => {
+  const found = state.items.find(entry => entry.id === action.payload.id);
+  if (found) {
+    if (action.payload.quantity <= 0) {
+      state.items = state.items.filter(entry => entry.id !== action.payload.id);
+    } else {
+      found.quantity = action.payload.quantity;
+    }
+  }
+},
     clearCart: (state) => {
+      console.log('clearCart reducer triggered');
       state.items = [];
     },
   },
@@ -51,13 +54,13 @@ export const selectCartItems = (state: RootState) => state.cart.items;
 
 export const selectCartItemsCount = createSelector(
   [selectCartItems],
-  (items) => items.reduce((total, entry) => total + entry.quantity, 0)
+  (items) => items.reduce((total, cartEntry) => total + cartEntry.quantity, 0)
 );
 
 export const selectCartTotal = createSelector(
   [selectCartItems],
   (items) =>
-    items.reduce((total, entry) => total + entry.price * entry.quantity, 0).toFixed(2)
+    items.reduce((total, cartEntry) => total + cartEntry.price * cartEntry.quantity, 0).toFixed(2)
 );
 
 export default cartSlice.reducer;
